@@ -1,0 +1,36 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+struct element
+{
+    ll a;
+    element(ll b){a=b;}
+    bool operator<(const element& p) const{
+        return p.a < a;
+    }
+};
+int main()
+{
+    int n;
+    cin>>n;
+    priority_queue<element>q;
+    for(int i=0; i<n; i++){
+        ll val;
+        cin>>val;
+        q.push(val);
+    }
+    ll track =0;
+    int cnt =0;
+    while(!q.empty()){
+        if(q.top().a>=track){
+            cnt++;
+            track+=q.top().a;
+            q.pop();
+        }
+        else{
+            q.pop();
+        }
+
+    }
+    cout<<cnt<<endl;
+}
