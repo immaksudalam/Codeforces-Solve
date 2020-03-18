@@ -1,0 +1,57 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define maxsize 131073
+int arr[maxsize];
+int tree[4*maxsize];
+bool par[4*maxsize];
+void combine(int node)
+{
+   if(par[node]) tree[node] = (tree[node*2] | tree[2*node+1]);
+   else          tree[node] = (tree[2*node] ^ tree[2*node+1]);
+}
+void buildTree(int node, int left, int right){
+     if(left == right){
+        tree[node] = arr[left];
+        par[node]= 0;
+        return;
+     }
+      int leftTree = 2*node;
+      int rightTree = 2*node+1;
+      int mid = (left + right)/2;
+        buildTree(leftTree, left, mid);
+        buildTree(rightTree, mid+1, right);
+        par[node] = !par[node*2];
+        combine(node);
+
+
+}
+void Update(int node, int L, int R, int pos, int NewVal){
+    if(pos>R || pos<L)return;
+    if(L==pos && R==pos){
+        tree[node] = NewVal;
+        return;
+    }
+    int leftNOde = 2*node;
+    int rightNode = 2*node +1;
+    int mid = (L+R)/2;
+    Update(leftNOde, L, mid, pos, NewVal);
+    Update(rightNode,mid+1, R, pos, NewVal);
+    combine(node);
+}
+int main()
+{
+    int n, q;
+    cin>>n>>q;
+    n = pow(2,n);
+    for(int i=1; i<=n; i++){
+        cin>>arr[i];
+    }
+    buildTree(1,1,n);
+    for(int i=1; i<=q; i++){
+        int pos, val;
+        cin>>pos>>val;
+        Update(1, 1, n, pos, val);
+        cout<<tree[1]<<endl;
+    }
+
+}
