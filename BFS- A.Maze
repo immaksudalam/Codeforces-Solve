@@ -1,0 +1,60 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define mx 501
+char arr[mx][mx];
+int vis=0;
+int v[mx][mx];
+int dot=0;
+int k;
+int dx[] = {1, -1, 0, 0};
+int dy[] = {0, 0, 1, -1};
+void bfs(int a, int b, int n, int m)
+{
+    queue<pair<int, int> >q;
+    q.push({a,b});
+    v[a][b]=1;
+    vis++;
+    if(vis == dot - k)return;
+    while(!q.empty()){
+        pair<int, int> u = q.front();
+        q.pop();
+        for(int i=0; i<4; i++){
+            pair<int, int> vv = {u.first+dx[i], u.second+dy[i]};
+            if((vv.first>=0 && vv.first<=n)&&(vv.second>=0 && vv.second <=m) &&arr[vv.first][vv.second]=='.'&& v[vv.first][vv.second]==0){
+                v[vv.first][vv.second]=1;
+
+                    q.push({vv.first, vv.second});
+                    vis++;
+                    if(vis==dot-k)return;
+
+            }
+
+        }
+    }
+}
+int main()
+{
+    for(int r=0;r<mx;r++) memset(v[r],0,sizeof v[r]);
+    int n,m;
+    cin>>n>>m>>k;
+    bool flag=false;
+    pair<int, int>pr;
+    for(int i=0; i<n; i++){
+        for(int j=0; j<m; j++){
+            cin>>arr[i][j];
+            if(arr[i][j]=='.')dot++;
+            if(arr[i][j]=='.' && flag==false){
+                pr={i,j};
+            }
+        }
+    }
+
+    bfs(pr.first, pr.second, n, m);
+    for(int i=0;i<n;i++){
+		for(int j=0;j<m;j++){
+			if(v[i][j]==0 && arr[i][j]=='.')	cout<<"X";
+			else cout<<arr[i][j];
+		}
+		cout<<endl;
+	}
+}
